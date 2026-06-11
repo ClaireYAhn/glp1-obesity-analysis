@@ -1,0 +1,7 @@
+Drug,Generic_Name,Avg_Weight_Loss_Percent,Trial_Duration_Weeks,Sample_Size,Year_Approved,Manufacturer,Type
+Ozempic,Semaglutide 1mg,6.0,68,1961,2017,Novo Nordisk,GLP-1
+Wegovy,Semaglutide 2.4mg,14.9,68,1961,2021,Novo Nordisk,GLP-1
+Mounjaro,Tirzepatide 15mg,20.9,72,2539,2022,Eli Lilly,GLP-1/GIP
+Zepbound,Tirzepatide 15mg,20.9,72,2539,2024,Eli Lilly,GLP-1/GIP
+Saxenda,Liraglutide 3mg,8.0,56,3731,2014,Novo Nordisk,GLP-1
+Placeholder_Lifestyle,Lifestyle Only,2.4,68,1961,0,None,Control
