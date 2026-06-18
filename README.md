@@ -1,6 +1,11 @@
 # Can GLP-1 Drugs Solve the Obesity Epidemic?
 ### An Exploratory Data Analysis
 
+##Live Dashboard
+**[View the interactive dashboard here](https://glp1-obesity.streamlit.app/)**
+
+Built with Streamlit and Plotly. Explore global obesity trends, GLP-1 drug effectiveness, and a logistic regression model comparing predictive features.
+
 This project explores the global obesity epidemic and the rapid rise of GLP-1 receptor agonist drugs (Wegovy, Mounjaro, Ozempic) as a treatment. By combining multiple data sources, we investigate whether these drugs can address the growing obesity crisis.
 
 ## Key Findings
