@@ -1,7 +1,8 @@
 # Can GLP-1 Drugs Solve the Obesity Epidemic?
 ### An Exploratory Data Analysis
 
-##Live Dashboard
+## Live Dashboard
+
 **[View the interactive dashboard here](https://glp1-obesity.streamlit.app/)**
 
 Built with Streamlit and Plotly. Explore global obesity trends, GLP-1 drug effectiveness, and a logistic regression model comparing predictive features.
