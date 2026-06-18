@@ -7,14 +7,15 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import accuracy_score
 
-#Setting page - Must the first order for Streamlit
+#Page setup - must be the first Streamlit command.
 st.set_page_config(page_title="GLP-1 & Obesity Dashboard", layout="wide")
 
-#Title & Brif
+#Title & Brief
 st.title("Can GLP-1 Drugs Solve the Obesity Epidemic?")
-st.caption("Interactive dashboard | 5 datasets")
+st.caption("Interactive dashboard | 5 data sources")
+st.write("This dashboard explores whether GLP-1 drugs are an effective response to rising obesity.")
 
-#Chart 1관련 
+#Chart 1
 @st.cache_data
 def load_obesity_global():
     df = pd.read_csv("data/obesity_global.csv")
@@ -23,7 +24,7 @@ def load_obesity_global():
 
 obesity_global = load_obesity_global()
 
-#Chart 2, 5관련
+#Chart 2 & 5
 @st.cache_data
 def load_obesity_risk():
     df = pd.read_csv("data/obesity_level.csv")
@@ -46,7 +47,7 @@ def load_obesity_risk():
 
 obesity_risk = load_obesity_risk()
 
-#Chart 3관련
+#Chart 3
 @st.cache_data
 def load_prescriptions():
     df = pd.read_csv("data/glp1_prescriptions.csv")
@@ -54,7 +55,7 @@ def load_prescriptions():
 
 prescriptions = load_prescriptions()
 
-#Chart 4 관련
+#Chart 4 
 @st.cache_data
 def load_effectiveness():
     df = pd.read_csv("data/glp1_effectiveness.csv")
@@ -70,26 +71,28 @@ with tab1:
     #Chart 1: Global obesity trend
     st.subheader("Obesity Rate Over Time (1980 to 2024)")
 
-        #고를 수 있는 나라/지역 목록
+    #List of countries/regions to choose from
     options = sorted(obesity_global["Entity"].unique())
 
-        #기본값을 "World"로 잡기 위해 위치 찾기
+    #Find index of "World" to set as default
     default_index = options.index("World")
 
-        #선택박스: 사용자가 여기서 하나 고름
+    #Selecbox: user picks one
     selected = st.selectbox("Select a country or region:", options, index=default_index)
 
-        #고른 값으로 데이터 필터링
+    #Filter data by selected value
     filtered = obesity_global[obesity_global["Entity"] == selected]
 
-     #Chart1 
+    #Chart1 
     fig1 = px.line(filtered, x="Year", y="Obesity_Pct",
-                  labels={"Obesity+Pct": "Obesity Prevalence (%)"} )
+                  labels={"Obesity_Pct": "Obesity Prevalence (%)"} )
 
     st.plotly_chart(fig1, use_container_width=True)
 
+    st.caption("Global obesity has more than tripled since 1980, and the trend is rising across every region.")
 
-        #Chart2: Family
+
+    #Chart2: Family
 
     #Prep data
     level_order = ["Insufficient_Weight", "Normal_Weight", "Overweight_Level_I", "Overweight_Level_II",
@@ -98,7 +101,7 @@ with tab1:
     obesity_risk_display = obesity_risk.copy()
     obesity_risk_display["family_history_with_overweight"] = obesity_risk_display["family_history_with_overweight"].map({1: "Yes", 0: "No"})
 
-        #count = 비만 등급별 * 가족력
+        #Count by obesity level x family history
     family = obesity_risk_display.groupby(["Obesity_Level", "family_history_with_overweight"]).size().reset_index(name="count")
 
     family["total"] = family.groupby("Obesity_Level")["count"].transform("sum")
@@ -112,6 +115,8 @@ with tab1:
     fig2.update_yaxes(title="Percentage (%)", ticksuffix="%")
 
     st.plotly_chart(fig2, use_container_width=True)
+    st.caption("Family history rises sharply with obesity level, suggesting biological or inherited factors that lifestyle alone cannot explain.")
+
 
 
 with tab2:  #Chart 3: GLP-1 spending
@@ -124,6 +129,7 @@ with tab2:  #Chart 3: GLP-1 spending
     fig3.update_traces(texttemplate="$%{y}B", textposition="outside")
 
     st.plotly_chart(fig3, use_container_width=True)
+    st.caption("Spending on GLP-1 drugs grew from $2.6B to $52B in six years, signalling explosive market demand.")
 
     #Chart 4: compare effectiveness
     st.subheader("GLP-1 Drug Effectiveness: Average Weight Loss")
@@ -138,23 +144,24 @@ with tab2:  #Chart 3: GLP-1 spending
     fig4.update_traces(texttemplate="%{x}%", textposition="outside")
 
     st.plotly_chart(fig4, use_container_width=True)
+    st.caption("GLP-1 drugs far outperform lifestyle changes alone: Mounjaro achieves 20.9% weight loss versus 2.4% for lifestyle only.")
 
 #Chart 5: Model A vs Model B
 
-#Model A에 쓸 전체 feature (including weight/height)
+# All features for Model A (including weight/height)
 features_a = ["Age", "Height", "Weight", "family_history_with_overweight",
               "Freq_High_Cal_Food", "Freq_Vegetables", "Num_Meals",
               "SMOKE", "Water_Daily", "Calorie_Monitoring","Physical_Activity_Freq", "Technology_Use"]
 
-#Model B에 쓸 Lifestyle feature (excluding weight/height)
+# Lifestyle features for Model B (excluding weight/height)
 features_b = ["Age", "family_history_with_overweight",
               "Freq_High_Cal_Food", "Freq_Vegetables", "Num_Meals",
               "SMOKE", "Water_Daily", "Calorie_Monitoring","Physical_Activity_Freq", "Technology_Use"]
 
-##모델 학습
+# Train models
 y = obesity_risk["Obesity_Level"]
 
-#Model A 학습
+# Train Model A
 X_a = obesity_risk[features_a]
 X_train_a, X_test_a, y_train_a, y_test_a = train_test_split(X_a, y, test_size=0.2, random_state=42)
 
@@ -166,7 +173,7 @@ model_a = LogisticRegression(max_iter=1000, random_state=42)
 model_a.fit(X_train_a, y_train_a)
 accuracy_a = accuracy_score(y_test_a, model_a.predict(X_test_a))
 
-#Model B 학습
+# Train Model B
 X_b = obesity_risk[features_b]
 X_train_b, X_test_b, y_train_b, y_test_b = train_test_split(X_b, y, test_size=0.2, random_state=42)
 
@@ -179,9 +186,14 @@ model_b.fit(X_train_b, y_train_b)
 accuracy_b = accuracy_score(y_test_b, model_b.predict(X_test_b))
 
 with tab3: 
-#두개 나란히 보여주기
+#Show the two side by side
     st.subheader("Predicting Obesity: All Features vs Lifestyle Only")
     col1, col2 = st.columns(2)
     col1.metric("Model A: All Features", f"{accuracy_a:.1%}")
     col2.metric("Model B: Lifestyle Only", f"{accuracy_b:.1%}")
 
+    st.caption("Model A includes weight and height, so its high accuracy partly reflects how obesity is defined (BMI). "
+                "Model B uses only lifestyle factors and drops to 52.5%, showing lifestyle alone cannot predict obesity well.")
+    
+st.caption("Data sources: WHO Global Health Observatory, Kaggle Obesity Risk Dataset, "
+           "STEP & SURMOUNT clinical trials, FAIR Health, and KFF (Kaiser Family Foundation).")
