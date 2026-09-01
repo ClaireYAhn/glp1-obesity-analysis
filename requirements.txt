@@ -1,6 +1,10 @@
-streamlit
-pandas
-plotly
-scikit-learn
-numpy
-xgboost
+# Versions pinned so the deployed app reproduces the notebook's figures exactly.
+# XGBoost changes tree-building details between releases: on this dataset,
+# xgboost 1.7.6 and 2.1.4 return 71.2% / 64.6% where 3.2.0 returns 71.6% / 65.1%.
+# Same code, same seed, same data. Only the library version differs.
+streamlit>=1.30
+pandas>=2.0
+plotly>=5.18
+numpy>=1.26
+scikit-learn==1.8.0
+xgboost==3.2.0

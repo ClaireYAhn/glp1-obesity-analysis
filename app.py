@@ -2,6 +2,9 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 
+import sklearn
+import xgboost
+
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
@@ -314,4 +317,10 @@ with tab3:
 
 st.caption("Data sources: WHO Global Health Observatory, Kaggle Obesity Risk Dataset (partly synthetic), "
            "STEP & SURMOUNT clinical trials, FAIR Health, and KFF (Kaiser Family Foundation).")
+
+#Printed so that a library upgrade shows up on the page instead of quietly moving
+#the accuracy figures. Both versions are pinned in requirements.txt.
+st.caption(f"Model figures trained live with xgboost {xgboost.__version__} and "
+           f"scikit-learn {sklearn.__version__}. These versions are pinned so the app "
+           "reproduces the notebook exactly, at 71.6% for XGBoost and 65.1% adjusted.")
 
