@@ -1,6 +1,15 @@
 # Can GLP-1 Drugs Solve the Obesity Epidemic?
 ### An Exploratory Data Analysis
 
+## Headline Result
+
+Predicting 7 obesity categories from 10 lifestyle features (no weight or height), tested with 5-fold cross-validation:
+
+- **XGBoost reaches 71.6%** against a **19.5%** majority-class baseline (always guessing Obesity Type III) and 52.0% for logistic regression
+- **65.1%** is the figure to trust. It is the same model scored on the 6 remaining categories after Obesity Type III, a synthetic-data artefact, is excluded
+- The 85.5% from a model that also sees weight and height is **target leakage**, because BMI is computed from those two columns
+- The dataset is partly synthetic (SMOTE-expanded), and the model predicts but does not explain
+
 ## Live Dashboard
 
 **[View the interactive dashboard here](https://glp1-obesity.streamlit.app/)**
@@ -12,11 +21,11 @@ This project explores the global obesity epidemic and the rapid rise of GLP-1 re
 ## Key Findings
 
 - Global obesity has **more than tripled** since 1980, affecting every region worldwide
-- **Age and family history** rank as the strongest predictors of obesity category across every model tested, with diet close behind. All of these are predictive associations, and none of them is a demonstrated cause
+- **Age, family history and diet** rank among the top predictors of obesity category across the models tested. These are predictive associations, and none of them is a demonstrated cause
 - GLP-1 drugs are highly effective: **Mounjaro achieves 20.9% average weight loss**, nearly 9x the figure for lifestyle changes alone
 - GLP-1 prescriptions grew **10x from 2018 to 2024**, with spending reaching $52 billion
-- Including weight and height gives **85.5% accuracy**, but that figure reflects **target leakage**. BMI is calculated from those two columns, so the model recomputes the label it is being asked to predict
-- Using **lifestyle features only**, logistic regression manages just **52.5%**, while XGBoost reaches **71.6%**. That falls to **65.1%** once one class is excluded for turning out to be a data-generation artefact. The weak linear result says more about the model than about the lifestyle data
+- Including weight and height gives **85.5% accuracy** on a single 80/20 split, but that figure reflects **target leakage**. BMI is calculated from those two columns, so the model recomputes the label it is being asked to predict
+- Using **lifestyle features only** (7 classes, 5-fold CV), logistic regression manages **52.0%**, while XGBoost reaches **71.6%**, against a 19.5% majority-class baseline. That falls to **65.1%** on the other 6 classes once Obesity Type III is excluded as a data-generation artefact. The weak linear result says more about the model than about the lifestyle data
 - The case for GLP-1 drugs rests on the clinical trials: **2.4%** average weight loss from lifestyle programmes against **20.9%** from tirzepatide. The predictive model plays no part in that case
 
 ## Project Structure
